@@ -1,0 +1,12 @@
+# This is Git's per-user configuration file.
+[user]
+	name = James Menzies
+	email = james@menzies.io
+[init]
+	defaultBranch = main
+[core]
+	autocrlf = input
+[color]
+	ui = true
+
+
