@@ -1,19 +1,25 @@
-# This is Git's per-user configuration file.
 [user]
-	name = James Menzies
-	email = james@menzies.io
+	email = "james@menzies.io"
+	name = "James Menzies"
+	signingKey = "997831B9742AA61A"
+
 [init]
 	defaultBranch = main
+
+[submodule]
+	recurse = true
+
 [core]
 	autocrlf = input
+
 [color]
 	ui = true
 
+[commit]
+	gpgSign = true
 
-[filter "lfs"]
-	clean = git-lfs clean -- %f
-	smudge = git-lfs smudge -- %f
-	process = git-lfs filter-process
-	required = true
-[submodule]
-	recurse = true
+[push]
+	autoSetupRemote = true
+
+[tag]
+	gpgSign = true

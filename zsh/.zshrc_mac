@@ -1,0 +1,34 @@
+# Fig pre block. Keep at the top of this file.
+[[ -f "$HOME/.fig/shell/zshrc.pre.zsh" ]] && builtin source "$HOME/.fig/shell/zshrc.pre.zsh"
+[[ -f $HOME/.dotfiles/zsh/aliases.zsh ]] && source $HOME/.dotfiles/zsh/aliases.zsh
+[[ -f $HOME/.dotfiles/zsh/functions.zsh ]] && source $HOME/.dotfiles/zsh/functions.zsh
+[[ -f $HOME/.dotfiles/zsh/starship.zsh ]] && source $HOME/.dotfiles/zsh/starship.zsh
+
+export ZSH="/Users/james/.oh-my-zsh"
+
+plugins=(
+    git
+    zsh-syntax-highlighting
+    zsh-autosuggestions
+    brew
+    z
+)
+
+source $ZSH/oh-my-zsh.sh
+
+
+alias upgrade='brew upgrade && omz update && rustup update && sdk update'
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+eval "$(github-copilot-cli alias -- "$0")"
+
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="$HOME/.sdkman"
+[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+
+eval "$(starship init zsh)"
+
+# Fig post block. Keep at the bottom of this file.
+[[ -f "$HOME/.fig/shell/zshrc.post.zsh" ]] && builtin source "$HOME/.fig/shell/zshrc.post.zsh"
+
