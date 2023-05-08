@@ -1,8 +1,5 @@
 # Fig pre block. Keep at the top of this file.
 [[ -f "$HOME/.fig/shell/zshrc.pre.zsh" ]] && builtin source "$HOME/.fig/shell/zshrc.pre.zsh"
-[[ -f $HOME/.dotfiles/zsh/aliases.zsh ]] && source $HOME/.dotfiles/zsh/aliases.zsh
-[[ -f $HOME/.dotfiles/zsh/functions.zsh ]] && source $HOME/.dotfiles/zsh/functions.zsh
-[[ -f $HOME/.dotfiles/zsh/starship.zsh ]] && source $HOME/.dotfiles/zsh/starship.zsh
 
 export ZSH="/Users/james/.oh-my-zsh"
 
@@ -22,6 +19,9 @@ alias upgrade='brew upgrade && omz update && rustup update && sdk update'
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 eval "$(github-copilot-cli alias -- "$0")"
+
+[[ -f $HOME/.dotfiles/zsh/aliases.zsh ]] && source $HOME/.dotfiles/zsh/aliases.zsh
+[[ -f $HOME/.dotfiles/zsh/functions.zsh ]] && source $HOME/.dotfiles/zsh/functions.zsh
 
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="$HOME/.sdkman"

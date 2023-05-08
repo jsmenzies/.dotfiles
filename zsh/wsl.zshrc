@@ -30,7 +30,6 @@ eval "$(starship init zsh)"
 
 [[ -f ~/.dotfiles/zsh/aliases.zsh ]] && source ~/.dotfiles/zsh/aliases.zsh
 [[ -f ~/.dotfiles/zsh/functions.zsh ]] && source ~/.dotfiles/zsh/functions.zsh
-# [[ -f ~/.dotfiles/zsh/starship.zsh ]] && source ~/.dotfiles/zsh/starship.zsh
 
 # fnm
 export PATH="/home/jsm/.local/share/fnm:$PATH"

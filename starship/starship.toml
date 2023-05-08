@@ -37,7 +37,7 @@ deleted = " "
 [aws]
 symbol = "☁️ "
 style = "bold red"
-format = 'on [$symbol($profile )(\[$duration\] )]($style)'
+format = 'on [$symbol ($profile )(\[$duration\] )]($style)'
 region_aliases = { "eu-central-1" = "eu", "ap-southeast-2" = "ap-se-2" }
 expiration_symbol = 'X'
 
@@ -46,10 +46,9 @@ min_time = 2_000
 format = 'took [$duration]($style) '
 
 [docker_context]
-symbol = "🐳 "
+disabled = true
 style = "bold blue"
-format = 'via [🐋 $context](blue bold)'
-detect_files = ['Dockerfile', '.dockerignore', 'docker-compose.yml', 'docker-compose.yaml']
+format = 'via [\[ $context\]](bold blue) '
 
 [memory_usage]
 disabled = true
@@ -59,10 +58,21 @@ symbol = '🐏'
 style = 'bold dimmed green'
 
 [terraform]
-format = "via [ terraform]($style) "
+disabled = true
+format = "via [ terraform ]($style)"
 
 [python]
 format = 'with [${symbol}${pyenv_prefix}(${version} )(\($virtualenv\) )]($style)'
 version_format = "v${major}.${minor}"
 symbol = " "
 python_binary = "python3"
+
+[cmake]
+disabled = true
+
+[shell]
+fish_indicator = ''
+powershell_indicator = '_'
+unknown_indicator = 'mystery shell'
+style = 'cyan bold'
+disabled = true
