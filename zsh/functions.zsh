@@ -18,6 +18,7 @@ function auth () {
     eval $(op signin)
     authenticate
   fi
+  export AWSU_PROFILE=$OKTA_AWS_ACCOUNT_NAME
 }
 
 # Colormap
