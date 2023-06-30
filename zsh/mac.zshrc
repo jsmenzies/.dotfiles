@@ -16,6 +16,8 @@ source $ZSH/oh-my-zsh.sh
 
 alias upgrade='brew upgrade && omz update && rustup update && sdk update'
 
+export PATH="/usr/local/opt/make/libexec/gnubin:$PATH"
+
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 eval "$(github-copilot-cli alias -- "$0")"
@@ -31,4 +33,7 @@ eval "$(starship init zsh)"
 
 # Fig post block. Keep at the bottom of this file.
 [[ -f "$HOME/.fig/shell/zshrc.post.zsh" ]] && builtin source "$HOME/.fig/shell/zshrc.post.zsh"
+
+
+test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 

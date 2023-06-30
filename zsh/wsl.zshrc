@@ -14,10 +14,6 @@ plugins=(
 
 source "$ZSH/oh-my-zsh.sh"
 
-# VPN connectivity
-wsl.exe -d wsl-vpnkit --cd /app service wsl-vpnkit status >/dev/null || \
-wsl.exe -d wsl-vpnkit --cd /app service wsl-vpnkit start
-
 alias activate='source ~/.virtualenvs/wealth-xplan-update-publisher/bin/activate'
 alias reload='source ~/.zshrc'
 alias bat='batcat'
