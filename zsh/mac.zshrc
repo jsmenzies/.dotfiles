@@ -1,6 +1,5 @@
 # Fig pre block. Keep at the top of this file.
 [[ -f "$HOME/.fig/shell/zshrc.pre.zsh" ]] && builtin source "$HOME/.fig/shell/zshrc.pre.zsh"
-
 export ZSH="/Users/james/.oh-my-zsh"
 
 plugins=(
@@ -13,6 +12,7 @@ plugins=(
 
 source $ZSH/oh-my-zsh.sh
 
+eval "$(fnm env --use-on-cd)"
 
 alias upgrade='brew upgrade && omz update && rustup update && sdk update'
 
@@ -31,9 +31,9 @@ export SDKMAN_DIR="$HOME/.sdkman"
 
 eval "$(starship init zsh)"
 
-# Fig post block. Keep at the bottom of this file.
-[[ -f "$HOME/.fig/shell/zshrc.post.zsh" ]] && builtin source "$HOME/.fig/shell/zshrc.post.zsh"
-
+eval "$(rbenv init - zsh)"
 
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
+# Fig post block. Keep at the bottom of this file.
+[[ -f "$HOME/.fig/shell/zshrc.post.zsh" ]] && builtin source "$HOME/.fig/shell/zshrc.post.zsh"
