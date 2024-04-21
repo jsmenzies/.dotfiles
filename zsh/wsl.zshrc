@@ -1,3 +1,5 @@
+zmodload zsh/zprof
+
 setopt HIST_IGNORE_ALL_DUPS
 
 export STARSHIP_CONFIG="$HOME/.dotfiles/starship/starship.toml"
@@ -14,15 +16,9 @@ plugins=(
 
 source "$ZSH/oh-my-zsh.sh"
 
-# VPN connectivity
-wsl.exe -d wsl-vpnkit --cd /app service wsl-vpnkit status >/dev/null || \
-wsl.exe -d wsl-vpnkit --cd /app service wsl-vpnkit start
-
-alias activate='source ~/.virtualenvs/wealth-xplan-update-publisher/bin/activate'
 alias reload='source ~/.zshrc'
 alias bat='batcat'
-
-eval "$(github-copilot-cli alias -- "$0")"
+alias op='op.exe'
 
 eval "$(starship init zsh)"
 
@@ -32,5 +28,27 @@ eval "$(starship init zsh)"
 [[ -f ~/.dotfiles/zsh/functions.zsh ]] && source ~/.dotfiles/zsh/functions.zsh
 
 # fnm
-export PATH="/home/jsm/.local/share/fnm:$PATH"
-eval "`fnm env`"
+eval "$(fnm env --use-on-cd)"
+
+eval "$(rbenv init -)"
+
+# pnpm
+export PNPM_HOME="/home/jsm/.local/share/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
+
+# bun completions
+[ -s "/home/jsm/.bun/_bun" ] && source "/home/jsm/.bun/_bun"
+
+eval "$(github-copilot-cli alias -- "$0")"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="$HOME/.sdkman"
+[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
