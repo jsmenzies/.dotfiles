@@ -1,3 +1,5 @@
+zmodload zsh/zprof
+
 setopt HIST_IGNORE_ALL_DUPS
 
 export STARSHIP_CONFIG="$HOME/.dotfiles/starship/starship.toml"

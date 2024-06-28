@@ -1,7 +1,7 @@
 [user]
 	email = "james@menzies.io"
 	name = "James Menzies"
-	signingKey = "B267F82C4A166453915930FE477FCAE2667DD8D1"
+	signingKey = "8F744E5C1AA8AB64B08411A0997831B9742AA61A"
 
 [init]
 	defaultBranch = main
