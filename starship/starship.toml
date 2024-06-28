@@ -76,3 +76,7 @@ powershell_indicator = '_'
 unknown_indicator = 'mystery shell'
 style = 'cyan bold'
 disabled = true
+
+[java]
+symbol = " "
+style = "red"

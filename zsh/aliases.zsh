@@ -6,7 +6,7 @@
 
 # ls
 unalias l
-alias l='exa --all --long --icons --color=auto --no-permissions --octal-permissions'
+alias l='eza --all --long --icons --color=auto --no-permissions --octal-permissions'
 
 # Zsh
 alias reload='source ~/.zshrc'
