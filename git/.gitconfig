@@ -1,7 +1,7 @@
 [user]
 	email = "james@menzies.io"
 	name = "James Menzies"
-	signingKey = "8F744E5C1AA8AB64B08411A0997831B9742AA61A"
+	signingkey = 2B1D24992A073E0E
 
 [init]
 	defaultBranch = main
@@ -16,7 +16,7 @@
 	ui = true
 
 [commit]
-	gpgSign = true
+	gpgsign = true
 
 [push]
 	autoSetupRemote = true
