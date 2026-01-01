@@ -1,9 +1,7 @@
 [user]
 	email = "james@menzies.io"
 	name = "James Menzies"
-
-[include]
-	path = ~/.gitconfig.local
+	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKoqMekREx+siBaVyBmCR0X8vkq6uXk3PmtL8wznz9Ik
 
 [init]
 	defaultBranch = main
@@ -16,9 +14,6 @@
 
 [gpg]
 	format = ssh
-
-[gpg "ssh"]
-	allowedSignersFile = ~/.dotfiles/git/allowed_signers
 
 [color]
 	ui = true
