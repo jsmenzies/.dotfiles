@@ -1,3 +1,2 @@
 [user]
-        # Replace this with your Mac SSH Public Key (e.g. cat ~/.ssh/id_ed25519.pub)
-        signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIERKpMxbW3Kd/taJzZaqRaJHRK07aB3bXKgoyyvDnb52
+    signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIERKpMxbW3Kd/taJzZaqRaJHRK07aB3bXKgoyyvDnb52
