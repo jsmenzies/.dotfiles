@@ -1,7 +1,9 @@
 [user]
 	email = "james@menzies.io"
 	name = "James Menzies"
-	signingkey = 2B1D24992A073E0E
+
+[include]
+	path = ~/.gitconfig.local
 
 [init]
 	defaultBranch = main
@@ -11,6 +13,9 @@
 
 [core]
 	autocrlf = input
+
+[gpg]
+	format = ssh
 
 [color]
 	ui = true
