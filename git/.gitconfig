@@ -17,6 +17,9 @@
 [gpg]
 	format = ssh
 
+[gpg "ssh"]
+	allowedSignersFile = ~/.dotfiles/git/allowed_signers
+
 [color]
 	ui = true
 
