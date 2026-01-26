@@ -9,11 +9,13 @@ plugins=(
     git
     zsh-autosuggestions
     zsh-syntax-highlighting
-    zsh-z
     zsh-history-substring-search
 )
 
 source "$ZSH/oh-my-zsh.sh"
+
+# Initialize zoxide (better z) - stores data in $XDG_DATA_HOME/zoxide
+eval "$(zoxide init zsh)"
 
 alias reload='source ~/.zshrc'
 alias bat='batcat'
