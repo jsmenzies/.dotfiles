@@ -1,2 +1,14 @@
-.idea/.DS_Store
+# IDE
+.idea/
+.vscode/
+
+# OS Files
 .DS_Store
+Thumbs.db
+
+# Backup files
+*.backup
+*.bak
+
+# Other
+.dotfiles_backup/

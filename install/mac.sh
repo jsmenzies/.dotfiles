@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 set -e
 
-# Auto-detect dotfiles directory (where this script is located)
+# Auto-detect dotfiles directory (parent of where this script is located)
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-DOTFILES_DIR="${DOTFILES_DIR:-$SCRIPT_DIR}"
+DOTFILES_DIR="${DOTFILES_DIR:-$(dirname "$SCRIPT_DIR")}"
 BACKUP_DIR="$HOME/.dotfiles_backup/$(date +%Y%m%d_%H%M%S)"
 DRY_RUN=false
 
@@ -50,6 +50,19 @@ create_symlink() {
 
 main() {
     [[ "$1" == "--dry-run" || "$1" == "-n" ]] && DRY_RUN=true && warn "Dry run mode"
+
+    # Verify XDG directories are set
+    info "Verifying XDG directories..."
+    if ! "$SCRIPT_DIR/verify-xdg.sh"; then
+        exit 1
+    fi
+    echo
+
+    # Verify required dependencies are installed
+    if ! "$SCRIPT_DIR/verify-dependencies.sh"; then
+        exit 1
+    fi
+    echo
 
     echo "Installing dotfiles..."
     echo

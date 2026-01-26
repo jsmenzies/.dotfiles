@@ -12,12 +12,6 @@ Code review findings and improvements for the dotfiles repository.
 - [ ] Add starship config export to both
 - [ ] Add `reload` alias to mac.zshrc or remove from WSL
 
-### 2. Commented-Out Code
-- [ ] Delete commented Java/Gradle aliases in `zsh/aliases.zsh:1-5` or document why kept
-
-### 3. Duplicate Configuration
-- [ ] Remove duplicate `bold-color = bright` in `ghostty/config:96`
-
 ---
 
 ## ⚠️ Medium Priority
@@ -28,11 +22,6 @@ Code review findings and improvements for the dotfiles repository.
   - Installation instructions
   - Features list
   - Performance notes (~110ms startup)
-
-### 5. Obsolete .profile File
-- [ ] Review if `.profile` is needed
-- [ ] Consider deleting (cargo already in `.zshenv` with XDG paths)
-- [ ] Or update to be consistent with XDG setup
 
 ### 6. Missing XDG Compliance for Additional Tools
 Add to `.zshenv`:
@@ -61,29 +50,6 @@ export NODE_REPL_HISTORY="$XDG_DATA_HOME/node_repl_history"
 ---
 
 ## 💡 Low Priority Improvements
-
-### 9. Better .gitignore
-Expand to include:
-```gitignore
-# IDE
-.idea/
-.vscode/
-*.swp
-*.swo
-*~
-
-# OS Files
-.DS_Store
-Thumbs.db
-
-# Backup files
-*.backup
-*.bak
-
-# Other
-.dotfiles_backup/
-```
-- [ ] Update `.gitignore` with better patterns
 
 ### 10. Install Script Enhancement
 - [ ] Add dependency checking
