@@ -75,9 +75,6 @@ check_command() {
             gh)
                 version="$(gh --version | head -n1 | cut -d' ' -f3)"
                 ;;
-            antidote)
-                version="$(antidote --version 2>/dev/null | head -n1 | awk '{print $3}')"
-                ;;
         esac
 
         if [[ -n "$version" ]]; then
@@ -101,11 +98,33 @@ check_1password_agent() {
     fi
 }
 
+check_antidote() {
+    # Antidote is a shell function, not a command in PATH
+    # Check for brew installation instead
+    if brew list antidote &> /dev/null; then
+        local version="$(brew info antidote --json | grep -o '"version":"[^"]*"' | cut -d'"' -f4)"
+        if [[ -n "$version" ]]; then
+            success "antidote v$version"
+        else
+            success "antidote"
+        fi
+        return 0
+    else
+        return 1
+    fi
+}
+
 echo "Required dependencies:"
 echo
 
 for cmd in "${REQUIRED[@]}"; do
-    if ! check_command "$cmd"; then
+    # Special handling for antidote (brew-only function)
+    if [[ "$cmd" == "antidote" ]]; then
+        if ! check_antidote; then
+            error "$cmd - NOT FOUND"
+            MISSING_REQUIRED+=("$cmd")
+        fi
+    elif ! check_command "$cmd"; then
         error "$cmd - NOT FOUND"
         MISSING_REQUIRED+=("$cmd")
     fi
