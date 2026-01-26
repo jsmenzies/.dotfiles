@@ -1,0 +1,3 @@
+# Zsh plugins managed by antidote
+zsh-users/zsh-syntax-highlighting
+zsh-users/zsh-autosuggestions

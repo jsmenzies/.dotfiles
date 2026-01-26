@@ -29,6 +29,7 @@ REQUIRED=(
     "zoxide"
     "eza"
     "mise"
+    "antidote"
 )
 
 # Optional dependencies
@@ -73,6 +74,9 @@ check_command() {
                 ;;
             gh)
                 version="$(gh --version | head -n1 | cut -d' ' -f3)"
+                ;;
+            antidote)
+                version="$(antidote --version 2>/dev/null | head -n1 | awk '{print $3}')"
                 ;;
         esac
 

@@ -1,16 +1,10 @@
-export ZSH="/Users/james/.oh-my-zsh"
 export SSH_AUTH_SOCK="$HOME/.1password/agent.sock"
 
-ZSH_DISABLE_COMPFIX=true
+# Initialize antidote plugin manager
+source $(brew --prefix)/opt/antidote/share/antidote/antidote.zsh
+antidote load
 
-plugins=(
-    zsh-syntax-highlighting
-    zsh-autosuggestions
-)
-
-source $ZSH/oh-my-zsh.sh
-
-alias upgrade='brew upgrade && omz update && rustup update'
+alias upgrade='brew upgrade && antidote update && rustup update'
 
 source <(fzf --zsh)
 

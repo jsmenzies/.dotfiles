@@ -26,7 +26,6 @@ Code review findings and improvements for the dotfiles repository.
 ### 6. Missing XDG Compliance for Additional Tools
 Add to `.zshenv`:
 ```zsh
-export HISTFILE="$XDG_STATE_HOME/zsh/history"
 export GNUPGHOME="$XDG_DATA_HOME/gnupg"
 export DOCKER_CONFIG="$XDG_CONFIG_HOME/docker"
 export NPM_CONFIG_USERCONFIG="$XDG_CONFIG_HOME/npm/npmrc"

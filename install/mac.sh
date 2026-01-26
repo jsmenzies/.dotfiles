@@ -68,6 +68,7 @@ main() {
     create_symlink "$DOTFILES_DIR/zsh/.zshenv" "$HOME/.config/zsh/.zshenv"
     create_symlink "$DOTFILES_DIR/zsh/.zprofile" "$HOME/.config/zsh/.zprofile"
     create_symlink "$DOTFILES_DIR/zsh/.zshrc" "$HOME/.config/zsh/.zshrc"
+    create_symlink "$DOTFILES_DIR/zsh/.zsh_plugins.txt" "$HOME/.config/zsh/.zsh_plugins.txt"
     create_symlink "$DOTFILES_DIR/zsh/aliases.zsh" "$HOME/.config/zsh/aliases.zsh"
     create_symlink "$DOTFILES_DIR/zsh/functions.zsh" "$HOME/.config/zsh/functions.zsh"
 
