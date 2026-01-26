@@ -14,8 +14,8 @@ alias upgrade='brew upgrade && omz update && rustup update'
 
 source <(fzf --zsh)
 
-[[ -f $HOME/.dotfiles/zsh/aliases.zsh ]] && source $HOME/.dotfiles/zsh/aliases.zsh
-[[ -f $HOME/.dotfiles/zsh/functions.zsh ]] && source $HOME/.dotfiles/zsh/functions.zsh
+[[ -f $ZDOTDIR/aliases.zsh ]] && source $ZDOTDIR/aliases.zsh
+[[ -f $ZDOTDIR/functions.zsh ]] && source $ZDOTDIR/functions.zsh
 
 eval "$(starship init zsh)"
 

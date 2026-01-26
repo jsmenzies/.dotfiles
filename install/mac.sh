@@ -58,19 +58,18 @@ main() {
     fi
     echo
 
-    # Verify required dependencies are installed
-    if ! "$SCRIPT_DIR/verify-dependencies.sh"; then
-        exit 1
-    fi
-    echo
-
     echo "Installing dotfiles..."
     echo
 
-    # ZSH
-    create_symlink "$DOTFILES_DIR/zsh/.zshenv" "$HOME/.zshenv"
-    create_symlink "$DOTFILES_DIR/zsh/.zprofile" "$HOME/.zprofile"
-    create_symlink "$DOTFILES_DIR/zsh/mac.zshrc" "$HOME/.zshrc"
+    # ZSH - minimal .zshenv in home sets ZDOTDIR
+    create_symlink "$DOTFILES_DIR/zsh/main.zshenv" "$HOME/.zshenv"
+
+    # ZSH - actual configs in ZDOTDIR (~/.config/zsh)
+    create_symlink "$DOTFILES_DIR/zsh/.zshenv" "$HOME/.config/zsh/.zshenv"
+    create_symlink "$DOTFILES_DIR/zsh/.zprofile" "$HOME/.config/zsh/.zprofile"
+    create_symlink "$DOTFILES_DIR/zsh/.zshrc" "$HOME/.config/zsh/.zshrc"
+    create_symlink "$DOTFILES_DIR/zsh/aliases.zsh" "$HOME/.config/zsh/aliases.zsh"
+    create_symlink "$DOTFILES_DIR/zsh/functions.zsh" "$HOME/.config/zsh/functions.zsh"
 
     # Git
     create_symlink "$DOTFILES_DIR/git/.gitconfig" "$HOME/.gitconfig"
@@ -87,6 +86,12 @@ main() {
     echo
     [[ -d "$BACKUP_DIR" ]] && info "Backups: $BACKUP_DIR"
     echo "Done!"
+
+    # Verify required dependencies are installed
+    if ! "$SCRIPT_DIR/verify-dependencies.sh"; then
+        exit 1
+    fi
+    echo
 }
 
 main "$@"
