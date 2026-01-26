@@ -10,3 +10,10 @@ showenv() {
 showpath() {
   print -rl -- ${(s/:/)PATH}
 }
+
+# Lazy load mise
+mise() {
+  unfunction mise
+  eval "$(/opt/homebrew/bin/mise activate zsh)"
+  mise "$@"
+}
