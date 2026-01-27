@@ -1,5 +1,9 @@
 export SSH_AUTH_SOCK="$HOME/.1password/agent.sock"
 
+setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_FIND_NO_DUPS
+setopt HIST_SAVE_NO_DUPS
+
 # Initialize antidote plugin manager
 source $(brew --prefix)/opt/antidote/share/antidote/antidote.zsh
 antidote load
@@ -13,7 +17,9 @@ source <(fzf --zsh)
 
 eval "$(starship init zsh)"
 
-test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+# Bind arrow keys for history substring search
+bindkey '^[[A' history-substring-search-up
+bindkey '^[[B' history-substring-search-down
 
 export PATH="$HOME/.local/bin:$PATH"
 
