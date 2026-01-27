@@ -6,4 +6,4 @@ alias l='eza --all --long --icons --color=auto --no-permissions --octal-permissi
 alias yolo='git add . && git commit -m "vibing" && git push --set-upstream origin $(git rev-parse --abbrev-ref HEAD)'
 
 # Zsh
-alias reload='source ~/.zshrc'
+alias reload='source $ZDOTDIR/.zshrc'
