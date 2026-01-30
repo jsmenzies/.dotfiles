@@ -7,3 +7,5 @@ alias yolo='git add . && git commit -m "vibing" && git push --set-upstream origi
 
 # Zsh
 alias reload='source $ZDOTDIR/.zshrc'
+
+alias gs='git status'

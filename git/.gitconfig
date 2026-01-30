@@ -1,6 +1,6 @@
 [user]
-	email = "james@menzies.io"
-	name = "James Menzies"
+	email = james@menzies.io
+	name = James Menzies
 	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKoqMekREx+siBaVyBmCR0X8vkq6uXk3PmtL8wznz9Ik
 
 [init]
