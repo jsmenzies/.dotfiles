@@ -65,24 +65,24 @@ main() {
     create_symlink "$DOTFILES_DIR/zsh/main.zshenv" "$HOME/.zshenv"
 
     # ZSH - actual configs in ZDOTDIR (~/.config/zsh)
-    create_symlink "$DOTFILES_DIR/zsh/.zshenv" "$HOME/.config/zsh/.zshenv"
-    create_symlink "$DOTFILES_DIR/zsh/.zprofile" "$HOME/.config/zsh/.zprofile"
-    create_symlink "$DOTFILES_DIR/zsh/.zshrc" "$HOME/.config/zsh/.zshrc"
-    create_symlink "$DOTFILES_DIR/zsh/.zsh_plugins.txt" "$HOME/.config/zsh/.zsh_plugins.txt"
-    create_symlink "$DOTFILES_DIR/zsh/aliases.zsh" "$HOME/.config/zsh/aliases.zsh"
-    create_symlink "$DOTFILES_DIR/zsh/functions.zsh" "$HOME/.config/zsh/functions.zsh"
+    create_symlink "$DOTFILES_DIR/zsh/.zshenv" "$XDG_CONFIG_HOME/zsh/.zshenv"
+    create_symlink "$DOTFILES_DIR/zsh/.zprofile" "$XDG_CONFIG_HOME/zsh/.zprofile"
+    create_symlink "$DOTFILES_DIR/zsh/.zshrc" "$XDG_CONFIG_HOME/zsh/.zshrc"
+    create_symlink "$DOTFILES_DIR/zsh/.zsh_plugins.txt" "$XDG_CONFIG_HOME/zsh/.zsh_plugins.txt"
+    create_symlink "$DOTFILES_DIR/zsh/aliases.zsh" "$XDG_CONFIG_HOME/zsh/aliases.zsh"
+    create_symlink "$DOTFILES_DIR/zsh/functions.zsh" "$XDG_CONFIG_HOME/zsh/functions.zsh"
 
     # Git
-    create_symlink "$DOTFILES_DIR/git/.gitconfig" "$HOME/.gitconfig"
+    create_symlink "$DOTFILES_DIR/git/.gitconfig" "$XDG_CONFIG_HOME/git/config"
 
     # Starship (direct in .config)
-    create_symlink "$DOTFILES_DIR/starship/starship.toml" "$HOME/.config/starship.toml"
+    create_symlink "$DOTFILES_DIR/starship/starship.toml" "$XDG_CONFIG_HOME/starship.toml"
 
     # Ghostty (in subfolder)
-    create_symlink "$DOTFILES_DIR/ghostty/config" "$HOME/.config/ghostty/config"
+    create_symlink "$DOTFILES_DIR/ghostty/config" "$XDG_CONFIG_HOME/ghostty/config"
 
     # OpenCode theme only
-    create_symlink "$DOTFILES_DIR/opencode/ghostty.json" "$HOME/.config/opencode/themes/ghostty.json"
+    create_symlink "$DOTFILES_DIR/opencode/ghostty.json" "$XDG_CONFIG_HOME/opencode/themes/ghostty.json"
 
     echo
     [[ -d "$BACKUP_DIR" ]] && info "Backups: $BACKUP_DIR"
