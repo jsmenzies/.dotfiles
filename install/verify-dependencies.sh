@@ -1,167 +1,104 @@
 #!/usr/bin/env bash
 set -e
 
-# Colors
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[0;33m'
-BLUE='\033[0;34m'
-NC='\033[0m'
+# Source shared utilities
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/common.sh"
 
-error()   { echo -e "${RED}✗${NC} $1"; }
-success() { echo -e "${GREEN}✓${NC} $1"; }
-warn()    { echo -e "${YELLOW}!${NC} $1"; }
-info()    { echo -e "${BLUE}::${NC} $1"; }
-
-echo "Verifying dependencies..."
-echo
+header "Verifying dependencies"
 
 # Track missing dependencies
 MISSING_REQUIRED=()
 MISSING_OPTIONAL=()
 
-# Required dependencies
-REQUIRED=(
-    "git"
-    "brew"
-    "fzf"
-    "starship"
-    "zoxide"
-    "eza"
-    "mise"
-    "antidote"
-)
-
-# Optional dependencies
-OPTIONAL=(
-    "op"
-    "orbstack"
-    "gh"
-)
-
-check_command() {
-    local cmd="$1"
-
-    if command -v "$cmd" &> /dev/null; then
-        local version=""
-        case "$cmd" in
-            git)
-                version="$(git --version | cut -d' ' -f3)"
+# Check dependencies
+check_dependencies() {
+    for dep_spec in "${DEPENDENCIES[@]}"; do
+        IFS=':' read -r dep dep_type <<< "$dep_spec"
+        
+        case "$dep_type" in
+            special)
+                check_special "$dep"
                 ;;
-            brew)
-                version="$(brew --version | head -n1 | cut -d' ' -f2)"
+            required)
+                check_command_dep "$dep" required
                 ;;
-            fzf)
-                version="$(fzf --version | cut -d' ' -f1)"
-                ;;
-            starship)
-                version="$(starship --version 2>/dev/null | head -n1 | awk '{print $2}')"
-                ;;
-            zoxide)
-                version="$(zoxide --version 2>/dev/null | awk '{print $2}')"
-                ;;
-            eza)
-                version="$(eza --version 2>/dev/null | sed -n '2p' | awk '{print $1}' | sed 's/^v//')"
-                ;;
-            op)
-                version="$(op --version 2>/dev/null)"
-                ;;
-            orbstack)
-                version="$(orbstack version 2>/dev/null | head -n1 || echo "installed")"
-                ;;
-            mise)
-                version="$(mise --version 2>/dev/null | head -n1 | awk '{print $1}')"
-                ;;
-            gh)
-                version="$(gh --version | head -n1 | cut -d' ' -f3)"
+            optional)
+                check_command_dep "$dep" optional
                 ;;
         esac
+    done
+}
 
+# Check a standard command dependency
+check_command_dep() {
+    local cmd="$1"
+    local dep_type="$2"
+    
+    if command -v "$cmd" &> /dev/null; then
+        local version
+        version=$(get_version "$cmd")
+        
         if [[ -n "$version" ]]; then
             success "$cmd v$version"
         else
             success "$cmd"
         fi
-        return 0
     else
-        return 1
-    fi
-}
-
-check_1password_agent() {
-    local socket="$HOME/.1password/agent.sock"
-    if [[ -S "$socket" ]]; then
-        success "1password-agent"
-        return 0
-    else
-        return 1
-    fi
-}
-
-check_antidote() {
-    # Antidote is a shell function, not a command in PATH
-    # Check for brew installation instead
-    if brew list antidote &> /dev/null; then
-        local version="$(brew info antidote --json | grep -o '"version":"[^"]*"' | cut -d'"' -f4)"
-        if [[ -n "$version" ]]; then
-            success "antidote v$version"
-        else
-            success "antidote"
-        fi
-        return 0
-    else
-        return 1
-    fi
-}
-
-echo "Required dependencies:"
-echo
-
-for cmd in "${REQUIRED[@]}"; do
-    # Special handling for antidote (brew-only function)
-    if [[ "$cmd" == "antidote" ]]; then
-        if ! check_antidote; then
+        if [[ "$dep_type" == "required" ]]; then
             error "$cmd - NOT FOUND"
             MISSING_REQUIRED+=("$cmd")
+        else
+            warn "$cmd - NOT FOUND"
+            MISSING_OPTIONAL+=("$cmd")
         fi
-    elif ! check_command "$cmd"; then
-        error "$cmd - NOT FOUND"
-        MISSING_REQUIRED+=("$cmd")
     fi
-done
+}
 
-echo
-echo "Optional dependencies:"
-echo
+# Check special dependencies that aren't simple commands
+check_special() {
+    local dep="$1"
+    
+    case "$dep" in
+        antidote)
+            if brew list antidote &> /dev/null; then
+                local version
+                version=$(brew info antidote --json 2>/dev/null | grep -o '"version":"[^"]*"' | cut -d'"' -f4)
+                if [[ -n "$version" ]]; then
+                    success "antidote v$version"
+                else
+                    success "antidote"
+                fi
+            else
+                error "antidote - NOT FOUND"
+                MISSING_REQUIRED+=("antidote")
+            fi
+            ;;
+        1password-agent)
+            local socket="$HOME/.1password/agent.sock"
+            if [[ -S "$socket" ]]; then
+                success "1password-agent"
+            else
+                warn "1password-agent - NOT FOUND"
+                MISSING_OPTIONAL+=("1password-agent")
+            fi
+            ;;
+    esac
+}
 
-# Special handling for 1Password agent (check socket, not just CLI)
-if check_1password_agent; then
-    # Socket exists
-    :
-else
-    warn "1password-agent - NOT FOUND"
-    MISSING_OPTIONAL+=("1password-agent")
-fi
-
-# Check optional dependencies
-for cmd in "${OPTIONAL[@]}"; do
-    if ! check_command "$cmd"; then
-        warn "$cmd - NOT FOUND"
-        MISSING_OPTIONAL+=("$cmd")
-    fi
-done
+# Check all dependencies
+check_dependencies
 
 echo
 
 # Report results
 if [[ ${#MISSING_REQUIRED[@]} -eq 0 ]]; then
     success "All required dependencies are installed"
-
+    
     if [[ ${#MISSING_OPTIONAL[@]} -gt 0 ]]; then
-        echo
         info "Optional dependencies missing: ${MISSING_OPTIONAL[*]}"
     fi
-
+    
     exit 0
 else
     error "Missing required dependencies: ${MISSING_REQUIRED[*]}"

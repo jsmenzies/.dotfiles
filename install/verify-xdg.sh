@@ -1,18 +1,11 @@
 #!/usr/bin/env bash
 set -e
 
-# Colors
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[0;33m'
-NC='\033[0m'
+# Source shared utilities
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/common.sh"
 
-error()   { echo -e "${RED}✗${NC} $1"; }
-success() { echo -e "${GREEN}✓${NC} $1"; }
-warn()    { echo -e "${YELLOW}!${NC} $1"; }
-
-echo "Verifying XDG Base Directory specification..."
-echo
+header "Verifying XDG Base Directory specification"
 
 # Required XDG environment variables
 XDG_VARS=(
@@ -40,7 +33,6 @@ if $ALL_SET; then
     exit 0
 else
     error "Some XDG directories are missing"
-    echo
     warn "Please ensure your shell environment sets these variables before running the install script."
     warn "They should be defined in your .zshenv or equivalent shell configuration file."
     exit 1
