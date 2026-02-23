@@ -83,6 +83,14 @@ check_special() {
                 MISSING_OPTIONAL+=("1password-agent")
             fi
             ;;
+        gh-dash)
+            if gh extension list 2>/dev/null | grep -q "gh-dash"; then
+                success "gh-dash"
+            else
+                warn "gh-dash - NOT FOUND (install: gh extension install dlvhdr/gh-dash)"
+                MISSING_OPTIONAL+=("gh-dash")
+            fi
+            ;;
     esac
 }
 

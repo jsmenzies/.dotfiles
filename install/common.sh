@@ -32,6 +32,7 @@ DEPENDENCIES=(
     "op:optional"
     "orbstack:optional"
     "gh:optional"
+    "gh-dash:special"
     "1password-agent:special"
 )
 
@@ -49,6 +50,7 @@ SYNLINKS=(
     "starship/starship.toml:$XDG_CONFIG_HOME/starship.toml"
     "ghostty/config:$XDG_CONFIG_HOME/ghostty/config"
     "opencode/ghostty.json:$XDG_CONFIG_HOME/opencode/themes/ghostty.json"
+    "gh-dash/config.yml:$XDG_CONFIG_HOME/gh-dash/config.yml"
 )
 
 # Get version for a command

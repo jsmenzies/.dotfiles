@@ -21,8 +21,8 @@ eval "$(starship init zsh)"
 eval "$(/opt/homebrew/bin/mise activate zsh)"
 
 # Bind arrow keys for history substring search
-bindkey '^[[A' history-substring-search-up
-bindkey '^[[B' history-substring-search-down
+# bindkey '^[[A' history-substring-search-up
+# bindkey '^[[B' history-substring-search-down
 
 export PATH="$HOME/.local/bin:$PATH"
 
@@ -32,3 +32,4 @@ zstyle ':completion:*' format $'\e[2;37mCompleting %d\e[m'
 source <(carapace _carapace)
 
 eval "$(zoxide init zsh)"
+. "$HOME/.local/share/../bin/env"
