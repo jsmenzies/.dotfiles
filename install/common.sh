@@ -28,6 +28,7 @@ DEPENDENCIES=(
     "zoxide:required"
     "eza:required"
     "mise:required"
+    "aws:required"
     "antidote:special"
     "op:optional"
     "orbstack:optional"
@@ -50,7 +51,10 @@ SYNLINKS=(
     "starship/starship.toml:$XDG_CONFIG_HOME/starship.toml"
     "ghostty/config:$XDG_CONFIG_HOME/ghostty/config"
     "opencode/ghostty.json:$XDG_CONFIG_HOME/opencode/themes/ghostty.json"
+    "opencode/opencode.json:$XDG_CONFIG_HOME/opencode/opencode.json"
+    "opencode/skills:$XDG_CONFIG_HOME/opencode/skills"
     "gh-dash/config.yml:$XDG_CONFIG_HOME/gh-dash/config.yml"
+    "aws/config:$HOME/.aws/config"
 )
 
 # Get version for a command
@@ -89,6 +93,9 @@ get_version() {
             ;;
         gh)
             version=$(gh --version 2>/dev/null | head -n1 | cut -d' ' -f3)
+            ;;
+        aws)
+            version=$(aws --version 2>/dev/null | cut -d' ' -f1 | cut -d'/' -f2)
             ;;
     esac
     
