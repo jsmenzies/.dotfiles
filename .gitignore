@@ -12,3 +12,6 @@ Thumbs.db
 
 # Other
 .dotfiles_backup/
+
+# Local cloud config
+aws/config
