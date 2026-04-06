@@ -1,7 +1,12 @@
-if command -v brew >/dev/null 2>&1; then
-  eval "$(brew shellenv)"
-fi
+ZSH_DOTFILES_DIR="${${(%):-%N}:A:h}"
 
-# Added by OrbStack: command-line tools and integration
-# This won't be added again if you remove it.
-source ~/.orbstack/shell/init.zsh 2>/dev/null || :
+[[ -f "$ZSH_DOTFILES_DIR/shared.zprofile" ]] && source "$ZSH_DOTFILES_DIR/shared.zprofile"
+
+case "$OSTYPE" in
+  darwin*)
+    [[ -f "$ZSH_DOTFILES_DIR/platform/mac.zprofile" ]] && source "$ZSH_DOTFILES_DIR/platform/mac.zprofile"
+    ;;
+  linux*)
+    [[ -f "$ZSH_DOTFILES_DIR/platform/linux.zprofile" ]] && source "$ZSH_DOTFILES_DIR/platform/linux.zprofile"
+    ;;
+esac
