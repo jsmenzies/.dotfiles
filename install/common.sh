@@ -19,26 +19,6 @@ warn()    { echo -e "${YELLOW}!${NC} $1"; }
 info()    { echo -e "${BLUE}::${NC} $1"; }
 header()  { echo; echo -e "${BLUE}$1${NC}"; echo; }
 
-# Symlink configuration: source_path -> target_path
-# Paths are relative to DOTFILES_DIR and use $HOME or $XDG_CONFIG_HOME
-SHARED_SYMLINKS=(
-    "zsh/main.zshenv:$HOME/.zshenv"
-    "zsh/.zshenv:$XDG_CONFIG_HOME/zsh/.zshenv"
-    "zsh/.zprofile:$XDG_CONFIG_HOME/zsh/.zprofile"
-    "zsh/.zshrc:$XDG_CONFIG_HOME/zsh/.zshrc"
-    "zsh/.zsh_plugins.txt:$XDG_CONFIG_HOME/zsh/.zsh_plugins.txt"
-    "zsh/aliases.zsh:$XDG_CONFIG_HOME/zsh/aliases.zsh"
-    "zsh/functions.zsh:$XDG_CONFIG_HOME/zsh/functions.zsh"
-    "git/.gitconfig:$XDG_CONFIG_HOME/git/config"
-    "starship/starship.toml:$XDG_CONFIG_HOME/starship.toml"
-    "ghostty/config:$XDG_CONFIG_HOME/ghostty/config"
-    "opencode/ghostty.json:$XDG_CONFIG_HOME/opencode/themes/ghostty.json"
-    "opencode/opencode.json:$XDG_CONFIG_HOME/opencode/opencode.json"
-    "opencode/skills:$XDG_CONFIG_HOME/opencode/skills"
-    "gh-dash/config.yml:$XDG_CONFIG_HOME/gh-dash/config.yml"
-    "aws/config:$HOME/.aws/config"
-)
-
 # Platform scripts should set these before running install flow:
 # - PLATFORM_NAME
 # - PLATFORM_DEPENDENCIES ("name:type", type: required|optional|special)
@@ -129,8 +109,46 @@ verify_xdg() {
     return 1
 }
 
+ensure_xdg_defaults() {
+    if [[ -z "$XDG_CONFIG_HOME" ]]; then
+        export XDG_CONFIG_HOME="$HOME/.config"
+        info "Defaulted XDG_CONFIG_HOME=$XDG_CONFIG_HOME"
+    fi
+
+    if [[ -z "$XDG_CACHE_HOME" ]]; then
+        export XDG_CACHE_HOME="$HOME/.cache"
+        info "Defaulted XDG_CACHE_HOME=$XDG_CACHE_HOME"
+    fi
+
+    if [[ -z "$XDG_DATA_HOME" ]]; then
+        export XDG_DATA_HOME="$HOME/.local/share"
+        info "Defaulted XDG_DATA_HOME=$XDG_DATA_HOME"
+    fi
+
+    if [[ -z "$XDG_STATE_HOME" ]]; then
+        export XDG_STATE_HOME="$HOME/.local/state"
+        info "Defaulted XDG_STATE_HOME=$XDG_STATE_HOME"
+    fi
+}
+
 build_symlink_list() {
-    SYNLINKS=("${SHARED_SYMLINKS[@]}")
+    SYNLINKS=(
+        "zsh/main.zshenv:$HOME/.zshenv"
+        "zsh/.zshenv:$XDG_CONFIG_HOME/zsh/.zshenv"
+        "zsh/.zprofile:$XDG_CONFIG_HOME/zsh/.zprofile"
+        "zsh/.zshrc:$XDG_CONFIG_HOME/zsh/.zshrc"
+        "zsh/.zsh_plugins.txt:$XDG_CONFIG_HOME/zsh/.zsh_plugins.txt"
+        "zsh/aliases.zsh:$XDG_CONFIG_HOME/zsh/aliases.zsh"
+        "zsh/functions.zsh:$XDG_CONFIG_HOME/zsh/functions.zsh"
+        "git/.gitconfig:$XDG_CONFIG_HOME/git/config"
+        "starship/starship.toml:$XDG_CONFIG_HOME/starship.toml"
+        "ghostty/config:$XDG_CONFIG_HOME/ghostty/config"
+        "opencode/ghostty.json:$XDG_CONFIG_HOME/opencode/themes/ghostty.json"
+        "opencode/opencode.json:$XDG_CONFIG_HOME/opencode/opencode.json"
+        "opencode/skills:$XDG_CONFIG_HOME/opencode/skills"
+        "gh-dash/config.yml:$XDG_CONFIG_HOME/gh-dash/config.yml"
+        "aws/config:$HOME/.aws/config"
+    )
 
     if [[ ${#PLATFORM_SYMLINKS_EXTRA[@]} -gt 0 ]]; then
         SYNLINKS+=("${PLATFORM_SYMLINKS_EXTRA[@]}")
@@ -270,6 +288,7 @@ run_install() {
     local dry_run="${1:-false}"
     local backup_dir="${2:-$HOME/.dotfiles_backup/$(date +%Y%m%d_%H%M%S)}"
 
+    ensure_xdg_defaults
     info "Verifying XDG directories..."
     verify_xdg
 
