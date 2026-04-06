@@ -3,6 +3,7 @@
 
 # Auto-detect script directory
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+DOTFILES_DIR="${DOTFILES_DIR:-$(dirname "$SCRIPT_DIR")}"
 
 # Colors
 RED='\033[0;31m'
@@ -18,28 +19,9 @@ warn()    { echo -e "${YELLOW}!${NC} $1"; }
 info()    { echo -e "${BLUE}::${NC} $1"; }
 header()  { echo; echo -e "${BLUE}$1${NC}"; echo; }
 
-# Dependencies: "name:type"
-# type: required, optional, special
-DEPENDENCIES=(
-    "git:required"
-    "brew:required"
-    "fzf:required"
-    "starship:required"
-    "zoxide:required"
-    "eza:required"
-    "mise:required"
-    "aws:required"
-    "antidote:special"
-    "op:optional"
-    "orbstack:optional"
-    "gh:optional"
-    "gh-dash:special"
-    "1password-agent:special"
-)
-
 # Symlink configuration: source_path -> target_path
 # Paths are relative to DOTFILES_DIR and use $HOME or $XDG_CONFIG_HOME
-SYNLINKS=(
+SHARED_SYMLINKS=(
     "zsh/main.zshenv:$HOME/.zshenv"
     "zsh/.zshenv:$XDG_CONFIG_HOME/zsh/.zshenv"
     "zsh/.zprofile:$XDG_CONFIG_HOME/zsh/.zprofile"
@@ -56,6 +38,16 @@ SYNLINKS=(
     "gh-dash/config.yml:$XDG_CONFIG_HOME/gh-dash/config.yml"
     "aws/config:$HOME/.aws/config"
 )
+
+# Platform scripts should set these before running install flow:
+# - PLATFORM_NAME
+# - PLATFORM_DEPENDENCIES ("name:type", type: required|optional|special)
+# - optional platform_check_special <dep>
+# - optional PLATFORM_SYMLINKS_EXTRA
+PLATFORM_NAME="${PLATFORM_NAME:-unknown}"
+PLATFORM_DEPENDENCIES=()
+PLATFORM_SYMLINKS_EXTRA=()
+SYNLINKS=()
 
 # Get version for a command
 # Each command has different output format, handled individually
@@ -102,6 +94,49 @@ get_version() {
     echo "$version"
 }
 
+verify_xdg() {
+    header "Verifying XDG Base Directory specification"
+
+    local xdg_vars=(
+        "XDG_CONFIG_HOME"
+        "XDG_CACHE_HOME"
+        "XDG_DATA_HOME"
+        "XDG_STATE_HOME"
+    )
+
+    local all_set=true
+    local var
+
+    for var in "${xdg_vars[@]}"; do
+        if [[ -z "${!var}" ]]; then
+            error "$var is not set"
+            all_set=false
+        else
+            success "$var=${!var}"
+        fi
+    done
+
+    echo
+
+    if $all_set; then
+        success "All XDG directories are properly configured"
+        return 0
+    fi
+
+    error "Some XDG directories are missing"
+    warn "Please ensure your shell environment sets these variables before running the install script."
+    warn "They should be defined in your .zshenv or equivalent shell configuration file."
+    return 1
+}
+
+build_symlink_list() {
+    SYNLINKS=("${SHARED_SYMLINKS[@]}")
+
+    if [[ ${#PLATFORM_SYMLINKS_EXTRA[@]} -gt 0 ]]; then
+        SYNLINKS+=("${PLATFORM_SYMLINKS_EXTRA[@]}")
+    fi
+}
+
 # Create symlinks based on SYNLINKS configuration
 create_symlinks() {
     local dry_run="${1:-false}"
@@ -111,6 +146,11 @@ create_symlinks() {
     for link in "${SYNLINKS[@]}"; do
         IFS=':' read -r source target <<< "$link"
         local source_path="$dotfiles_dir/$source"
+
+        if [[ ! -e "$source_path" ]]; then
+            warn "Source missing, skipping: $source"
+            continue
+        fi
         
         # Create parent directory
         mkdir -p "$(dirname "$target")"
@@ -143,4 +183,103 @@ create_symlinks() {
     if [[ -d "$backup_dir" ]]; then
         info "Backups: $backup_dir"
     fi
+}
+
+check_command_dep() {
+    local cmd="$1"
+    local dep_type="$2"
+
+    if command -v "$cmd" >/dev/null 2>&1; then
+        local version
+        version=$(get_version "$cmd")
+
+        if [[ -n "$version" ]]; then
+            success "$cmd v$version"
+        else
+            success "$cmd"
+        fi
+    else
+        if [[ "$dep_type" == "required" ]]; then
+            error "$cmd - NOT FOUND"
+            MISSING_REQUIRED+=("$cmd")
+        else
+            warn "$cmd - NOT FOUND"
+            MISSING_OPTIONAL+=("$cmd")
+        fi
+    fi
+}
+
+check_special_dep() {
+    local dep="$1"
+
+    if declare -F platform_check_special >/dev/null 2>&1; then
+        platform_check_special "$dep"
+    else
+        warn "$dep - No platform special checker configured"
+        MISSING_OPTIONAL+=("$dep")
+    fi
+}
+
+verify_dependencies() {
+    local heading="Verifying dependencies"
+    if [[ -n "$PLATFORM_NAME" && "$PLATFORM_NAME" != "unknown" ]]; then
+        heading="Verifying dependencies (${PLATFORM_NAME})"
+    fi
+    header "$heading"
+
+    MISSING_REQUIRED=()
+    MISSING_OPTIONAL=()
+
+    local dep_spec dep dep_type
+    for dep_spec in "${PLATFORM_DEPENDENCIES[@]}"; do
+        IFS=':' read -r dep dep_type <<< "$dep_spec"
+
+        case "$dep_type" in
+            special)
+                check_special_dep "$dep"
+                ;;
+            required)
+                check_command_dep "$dep" required
+                ;;
+            optional)
+                check_command_dep "$dep" optional
+                ;;
+            *)
+                warn "$dep - Unknown dependency type: $dep_type"
+                ;;
+        esac
+    done
+
+    echo
+
+    if [[ ${#MISSING_REQUIRED[@]} -eq 0 ]]; then
+        success "All required dependencies are installed"
+
+        if [[ ${#MISSING_OPTIONAL[@]} -gt 0 ]]; then
+            info "Optional dependencies missing: ${MISSING_OPTIONAL[*]}"
+        fi
+
+        return 0
+    fi
+
+    error "Missing required dependencies: ${MISSING_REQUIRED[*]}"
+    return 1
+}
+
+run_install() {
+    local dry_run="${1:-false}"
+    local backup_dir="${2:-$HOME/.dotfiles_backup/$(date +%Y%m%d_%H%M%S)}"
+
+    info "Verifying XDG directories..."
+    verify_xdg
+
+    if [[ -n "$PLATFORM_NAME" && "$PLATFORM_NAME" != "unknown" ]]; then
+        header "Installing dotfiles (${PLATFORM_NAME})"
+    else
+        header "Installing dotfiles"
+    fi
+
+    build_symlink_list
+    create_symlinks "$dry_run" "$backup_dir" "$DOTFILES_DIR"
+    verify_dependencies
 }
