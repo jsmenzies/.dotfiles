@@ -151,7 +151,8 @@ build_symlink_list() {
         "ghostty/config:$XDG_CONFIG_HOME/ghostty/config"
         "opencode/ghostty.json:$XDG_CONFIG_HOME/opencode/themes/ghostty.json"
         "opencode/opencode.json:$XDG_CONFIG_HOME/opencode/opencode.json"
-        "opencode/skills:$XDG_CONFIG_HOME/opencode/skills"
+        "agents/skills:$XDG_CONFIG_HOME/opencode/skills"
+        "agents/AGENTS.md:$XDG_CONFIG_HOME/opencode/AGENTS.md"
         "gh-dash/config.yml:$XDG_CONFIG_HOME/gh-dash/config.yml"
         "aws/config:$HOME/.aws/config"
     )

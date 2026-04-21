@@ -1,10 +1,16 @@
 export SSH_AUTH_SOCK="$HOME/.1password/agent.sock"
 
+HISTFILE="${XDG_STATE_HOME:-$HOME/.local/state}/zsh/history"
+HISTSIZE=100000
+SAVEHIST=100000
+mkdir -p "${HISTFILE:h}"
+
 setopt HIST_IGNORE_ALL_DUPS
 setopt HIST_FIND_NO_DUPS
 setopt HIST_SAVE_NO_DUPS
 setopt SHARE_HISTORY
 setopt APPEND_HISTORY
+setopt INC_APPEND_HISTORY
 
 ANTIDOTE_PATH=""
 if command -v brew >/dev/null 2>&1; then
@@ -24,7 +30,7 @@ if [[ -n "$ANTIDOTE_PATH" && -f "$ANTIDOTE_PATH" ]]; then
   antidote load
 fi
 
-alias upgrade='brew upgrade && antidote update && rustup update'
+alias upgrade &>/dev/null || alias upgrade='brew upgrade && antidote update && rustup update'
 
 if command -v fzf >/dev/null 2>&1; then
   source <(fzf --zsh)
