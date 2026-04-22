@@ -30,7 +30,38 @@ if [[ -n "$ANTIDOTE_PATH" && -f "$ANTIDOTE_PATH" ]]; then
   antidote load
 fi
 
-alias upgrade &>/dev/null || alias upgrade='brew upgrade && antidote update && rustup update'
+upgrade() {
+  local failed=0
+
+  if command -v brew >/dev/null 2>&1; then
+    echo "==> Homebrew: update"
+    brew update || failed=1
+    echo "==> Homebrew: upgrade"
+    brew upgrade || failed=1
+    echo "==> Homebrew: upgrade casks"
+    brew upgrade --cask || failed=1
+    echo "==> Homebrew: cleanup"
+    brew autoremove || failed=1
+    brew cleanup || failed=1
+  fi
+
+  if command -v mise >/dev/null 2>&1; then
+    echo "==> mise: update tools"
+    mise up || failed=1
+  fi
+
+  if command -v npm >/dev/null 2>&1; then
+    echo "==> npm: update global packages"
+    npm update -g || failed=1
+  fi
+
+  if command -v antidote >/dev/null 2>&1; then
+    echo "==> antidote: update"
+    antidote update || failed=1
+  fi
+
+  return $failed
+}
 
 if command -v fzf >/dev/null 2>&1; then
   source <(fzf --zsh)
