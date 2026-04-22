@@ -151,6 +151,10 @@ build_symlink_list() {
         "ghostty/config:$XDG_CONFIG_HOME/ghostty/config"
         "opencode/ghostty.json:$XDG_CONFIG_HOME/opencode/themes/ghostty.json"
         "opencode/opencode.json:$XDG_CONFIG_HOME/opencode/opencode.json"
+        "pi/settings.json:$XDG_CONFIG_HOME/pi/agent/settings.json"
+        "pi/themes:$XDG_CONFIG_HOME/pi/agent/themes"
+        "pi/extensions:$XDG_CONFIG_HOME/pi/agent/extensions"
+        "pi/mcp.json:$XDG_CONFIG_HOME/pi/agent/mcp.json"
         "agents/skills:$XDG_CONFIG_HOME/opencode/skills"
         "agents/AGENTS.md:$XDG_CONFIG_HOME/opencode/AGENTS.md"
         "gh-dash/config.yml:$XDG_CONFIG_HOME/gh-dash/config.yml"
@@ -186,23 +190,32 @@ create_symlinks() {
             continue
         fi
         
+        if [[ "$dry_run" == "true" ]]; then
+            if [[ -e "$target" && ! -L "$target" ]]; then
+                info "[dry-run] Would back up: $target -> $backup_dir/"
+            fi
+
+            if [[ -L "$target" ]]; then
+                info "[dry-run] Would remove symlink: $target"
+            fi
+
+            info "[dry-run] Would link: $source_path -> $target"
+            continue
+        fi
+
         # Backup existing file (not symlink)
         if [[ -e "$target" && ! -L "$target" ]]; then
             mkdir -p "$backup_dir"
             mv "$target" "$backup_dir/"
             warn "Backed up: $target"
         fi
-        
+
         # Remove incorrect symlink
         [[ -L "$target" ]] && rm "$target"
-        
+
         # Create symlink
-        if [[ "$dry_run" == "true" ]]; then
-            info "[dry-run] Would link: $source_path -> $target"
-        else
-            ln -s "$source_path" "$target"
-            success "Linked: $target"
-        fi
+        ln -s "$source_path" "$target"
+        success "Linked: $target"
     done
     
     if [[ -d "$backup_dir" ]]; then

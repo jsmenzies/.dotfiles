@@ -1,0 +1,15 @@
+{
+  "theme": "ghostty",
+  "defaultProvider": "openai-codex",
+  "defaultModel": "gpt-5.3-codex",
+  "defaultThinkingLevel": "high",
+  "packages": [
+    "npm:pi-design-deck",
+    "npm:pi-subagents",
+    "npm:pi-mcp-adapter",
+    "npm:pi-web-access",
+    "npm:pi-interactive-shell",
+    "npm:pi-powerline-melbourne"
+  ],
+  "lastChangelogVersion": "0.68.1"
+}
