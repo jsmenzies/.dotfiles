@@ -29,6 +29,8 @@ upgrade() {
   fi
 
   if command -v npm >/dev/null 2>&1; then
+    echo "==> npm: outdated global packages"
+    npm -g outdated --depth=0 2>/dev/null || true
     echo "==> npm: update global packages"
     npm update -g || failed=1
   fi
